@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import 'package:flutter/material.dart';
 
 import '../Core/constants.dart';
@@ -86,12 +85,15 @@ class _SplashViewState extends State<SplashScreen> {
                         ),
                         const Positioned(
                             top: 350,
-                            child: Text(
-                              "Emotion Face Detection App",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 25),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                              child: Text(
+                                "Face Detection",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 25),
+                              ),
                             )),
                       ],
                     ),

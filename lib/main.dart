@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ChangeNotifierProvider(
-      create: (context) => EmotionDetectionProvider()..loadmodel(),
+      create: (context) => EmotionDetectionProvider()..loadmodel(context),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(

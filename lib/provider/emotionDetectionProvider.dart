@@ -8,9 +8,9 @@ import 'dart:io';
 import 'package:tflite_v2/tflite_v2.dart';
 
 import '../Core/constants.dart';
+import '../widgets/dialog.dart';
 
 class EmotionDetectionProvider with ChangeNotifier {
- 
   bool? _isLoading = true;
   List<dynamic> _predictions = [];
   XFile? _pickedFile;
@@ -21,47 +21,59 @@ class EmotionDetectionProvider with ChangeNotifier {
   XFile? get pickedFile => _pickedFile;
   CroppedFile? get croppedFile => _croppedFile;
 
-  loadmodel() async {
-    await Tflite.loadModel(
+  Future<void> loadmodel(context) async {
+    try {
+      await Tflite.loadModel(
         model: 'assets/ai/model_unquant.tflite',
-        labels: 'assets/ai/labels.txt');
+        labels: 'assets/ai/labels.txt',
+      );
+    } catch (e) {
+      showErrorDialog(context, e);
+    }
     notifyListeners();
   }
 
-  picking_image(ImageSource source) async {
+  Future<void> picking_image(ImageSource source, context) async {
     final ImagePicker picker = ImagePicker();
-    _pickedFile = await picker.pickImage(
-      source: source,
-      maxHeight: 1080,
-      maxWidth: 1080,
-    );
+    try {
+      _pickedFile = await picker.pickImage(
+        source: source,
+        maxHeight: 1080,
+        maxWidth: 1080,
+      );
 
-    if (_pickedFile != null) {
-      _croppedFile = await CropFunction.cropImage(_pickedFile!.path);
-      if (_croppedFile == null) {
- 
-        detect_image(File(_pickedFile!.path));
+      if (_pickedFile != null) {
+        _croppedFile = await CropFunction.cropImage(_pickedFile?.path ?? '');
+        if (_croppedFile == null) {
+          detect_image(File(_pickedFile?.path ?? ''), context);
+        } else {
+          detect_image(File(_croppedFile?.path ?? ''), context);
+        }
       } else {
-        detect_image(File(_croppedFile!.path));
+        // Handle case where image picking was canceled
+        _isLoading = false;
       }
-    } else {
-      // Handle case where image picking was canceled
-      _isLoading = false;
-      notifyListeners();
+    } catch (e) {
+      showErrorDialog(context, e);
     }
+    notifyListeners();
   }
 
-  detect_image(File image) async {
-    var predictions = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 2,
-      threshold: 0.6,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
+  Future<void> detect_image(File image, context) async {
+    try {
+      var predictions = await Tflite.runModelOnImage(
+        path: image.path,
+        numResults: 2,
+        threshold: 0.6,
+        imageMean: 127.5,
+        imageStd: 127.5,
+      );
 
-    _isLoading = false;
-    _predictions = predictions!;
+      _isLoading = false;
+      _predictions = predictions!;
+    } catch (e) {
+      showErrorDialog(context, e);
+    }
     notifyListeners();
   }
 }

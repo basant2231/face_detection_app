@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:face_detection_app/Core/constants.dart';
 import 'package:face_detection_app/provider/emotionDetectionProvider.dart';
 import 'package:face_detection_app/widgets/button.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:tflite_v2/tflite_v2.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -66,11 +64,12 @@ class _HomeState extends State<Home> {
                               child: provider.isLoading == false
                                   ? Container(
                                       child: provider.croppedFile == null
-                                          ? Image.file(
-                                              File(provider.pickedFile!.path))
+                                          ? Image.file(File(
+                                              provider.pickedFile?.path ?? ''))
                                           : provider.croppedFile != null
                                               ? Image.file(File(
-                                                  provider.pickedFile!.path))
+                                                  provider.pickedFile?.path ??
+                                                      ''))
                                               : Container(),
                                     )
                                   : Image.asset(
@@ -89,7 +88,7 @@ class _HomeState extends State<Home> {
                     () {
                       showcropDialog(context);
                       Future.delayed(Duration(seconds: 3), () {
-                        provider.picking_image(ImageSource.camera);
+                        provider.picking_image(ImageSource.camera, context);
                       });
                     },
                   ),
@@ -105,23 +104,36 @@ class _HomeState extends State<Home> {
                         context,
                       );
                       Future.delayed(Duration(seconds: 3), () {
-                        provider.picking_image(ImageSource.camera);
+                        provider.picking_image(ImageSource.gallery, context);
                       });
                     },
                   ),
-                  provider.isLoading == false
+                  provider.isLoading == false && provider.predictions.isNotEmpty
                       ? Text(
-                          '${provider.predictions[0]['label']}'
-                              .substring(2)
-                              .toUpperCase(),
+                          '${provider.predictions[0]['label'].toString().substring(2).toUpperCase()}',
                           style: const TextStyle(
                             color: Constants.mainlighterblue,
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
                           ),
                         )
-                      : Container(),
-                  provider.isLoading == false
+                      : provider.isLoading == true &&
+                              provider.predictions.isNotEmpty
+                          ? Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  ''' No predictions available 😔 try again 🔁''',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.85),
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                 provider.isLoading == false && provider.predictions.isNotEmpty
                       ? const Text(
                           'confidence :',
                           style: TextStyle(
@@ -131,7 +143,7 @@ class _HomeState extends State<Home> {
                           ),
                         )
                       : Container(),
-                  provider.isLoading == false
+                  provider.isLoading == false && provider.predictions.isNotEmpty
                       ? Text(
                           '${((provider.predictions[0]['confidence'] * 100).toStringAsFixed(2))}%',
                           style: GoogleFonts.orbitron(

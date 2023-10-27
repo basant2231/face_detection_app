@@ -16,9 +16,24 @@ void showcropDialog(BuildContext context) {
         fontWeight: FontWeight.bold, color: Constants.mainblue, fontSize: 20),
     desc: 'Crop the exact face for accurate answer',
     btnCancelOnPress: () {
-      Future.delayed(const Duration(seconds: 3), () {
-        Navigator.of(context).pop();
-      });
+    
+    },
+  ).show();
+}
+void showErrorDialog(BuildContext context,e) {
+  AwesomeDialog(
+    btnCancelColor: Constants.mainblue,
+    context: context,
+    dialogType: DialogType.error,
+    animType: AnimType.scale,
+    title: 'Error',
+    descTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold, color: Constants.buttonblue, fontSize: 15),
+    titleTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold, color: Constants.mainblue, fontSize: 20),
+    desc: e,
+    btnCancelOnPress: () {
+    
     },
   ).show();
 }
