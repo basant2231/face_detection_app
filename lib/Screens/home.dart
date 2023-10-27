@@ -63,10 +63,13 @@ class _HomeState extends State<Home> {
                             child: ClipOval(
                               child: provider.isLoading == false
                                   ? Container(
-                                      child: provider.croppedFile == null
+                                      child: provider.croppedFile == null &&
+                                              provider.pickedFile?.path != ''
                                           ? Image.file(File(
                                               provider.pickedFile?.path ?? ''))
-                                          : provider.croppedFile != null
+                                          : provider.croppedFile != null &&
+                                                  provider.pickedFile?.path !=
+                                                      ''
                                               ? Image.file(File(
                                                   provider.pickedFile?.path ??
                                                       ''))
@@ -133,7 +136,7 @@ class _HomeState extends State<Home> {
                               ),
                             )
                           : Container(),
-                 provider.isLoading == false && provider.predictions.isNotEmpty
+                  provider.isLoading == false && provider.predictions.isNotEmpty
                       ? const Text(
                           'confidence :',
                           style: TextStyle(

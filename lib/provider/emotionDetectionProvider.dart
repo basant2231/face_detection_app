@@ -33,31 +33,36 @@ class EmotionDetectionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> picking_image(ImageSource source, context) async {
-    final ImagePicker picker = ImagePicker();
-    try {
-      _pickedFile = await picker.pickImage(
-        source: source,
-        maxHeight: 1080,
-        maxWidth: 1080,
-      );
+Future<void> picking_image(ImageSource source, context) async {
+  final ImagePicker picker = ImagePicker();
+  try {
+    _pickedFile = await picker.pickImage(
+      source: source,
+      maxHeight: 1080,
+      maxWidth: 1080,
+    );
 
-      if (_pickedFile != null) {
-        _croppedFile = await CropFunction.cropImage(_pickedFile?.path ?? '');
-        if (_croppedFile == null) {
-          detect_image(File(_pickedFile?.path ?? ''), context);
-        } else {
-          detect_image(File(_croppedFile?.path ?? ''), context);
-        }
+    if (_pickedFile != null && _pickedFile!.path.isNotEmpty) {
+      _croppedFile = await CropFunction.cropImage(_pickedFile!.path ?? '');
+
+      if (_croppedFile != null && _croppedFile!.path.isNotEmpty) {
+        detect_image(File(_croppedFile!.path), context);
       } else {
-        // Handle case where image picking was canceled
-        _isLoading = false;
+        detect_image(File(_pickedFile!.path), context);
       }
-    } catch (e) {
-      showErrorDialog(context, e);
+    } else {
+      // Handle case where image picking was canceled or file paths are empty
+      _isLoading = false;
+      notifyListeners();
     }
+  } catch (e) {
+    print("Error: $e"); // Print the error for debugging purposes
+    showErrorDialog(context, e);
+    _isLoading = false;
     notifyListeners();
   }
+}
+
 
   Future<void> detect_image(File image, context) async {
     try {
