@@ -43,12 +43,12 @@ Future<void> picking_image(ImageSource source, context) async {
     );
 
     if (_pickedFile != null && _pickedFile!.path.isNotEmpty) {
-      _croppedFile = await CropFunction.cropImage(_pickedFile!.path ?? '');
+      _croppedFile = await CropFunction.cropImage(_pickedFile?.path ?? '');
 
       if (_croppedFile != null && _croppedFile!.path.isNotEmpty) {
-        detect_image(File(_croppedFile!.path), context);
+        detect_image(File(_croppedFile?.path??""), context);
       } else {
-        detect_image(File(_pickedFile!.path), context);
+        detect_image(File(_pickedFile?.path??""), context);
       }
     } else {
       // Handle case where image picking was canceled or file paths are empty

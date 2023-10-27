@@ -31,7 +31,7 @@ void showErrorDialog(BuildContext context,e) {
         fontWeight: FontWeight.bold, color: Constants.buttonblue, fontSize: 15),
     titleTextStyle: const TextStyle(
         fontWeight: FontWeight.bold, color: Constants.mainblue, fontSize: 20),
-    desc: e,
+    desc: '${e}',
     btnCancelOnPress: () {
     
     },

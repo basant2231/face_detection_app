@@ -61,20 +61,9 @@ class _HomeState extends State<Home> {
                               shape: BoxShape.circle,
                             ),
                             child: ClipOval(
-                              child: provider.isLoading == false
-                                  ? Container(
-                                      child: provider.croppedFile == null &&
-                                              provider.pickedFile?.path != ''
-                                          ? Image.file(File(
-                                              provider.pickedFile?.path ?? ''))
-                                          : provider.croppedFile != null &&
-                                                  provider.pickedFile?.path !=
-                                                      ''
-                                              ? Image.file(File(
-                                                  provider.pickedFile?.path ??
-                                                      ''))
-                                              : Container(),
-                                    )
+                              child: provider.isLoading == false &&
+                                      provider.pickedFile?.path != null
+                                  ? Image.file(File(provider.pickedFile!.path))
                                   : Image.asset(
                                       Constants.girlFace,
                                       fit: BoxFit.cover,
@@ -121,7 +110,8 @@ class _HomeState extends State<Home> {
                           ),
                         )
                       : provider.isLoading == true &&
-                              provider.predictions.isNotEmpty
+                              provider.predictions.isNotEmpty &&
+                          provider.pickedFile?.path != null
                           ? Align(
                               alignment: Alignment.center,
                               child: Padding(
@@ -136,7 +126,8 @@ class _HomeState extends State<Home> {
                               ),
                             )
                           : Container(),
-                  provider.isLoading == false && provider.predictions.isNotEmpty
+                  provider.isLoading == false &&
+                          provider.pickedFile?.path != null
                       ? const Text(
                           'confidence :',
                           style: TextStyle(
@@ -146,7 +137,9 @@ class _HomeState extends State<Home> {
                           ),
                         )
                       : Container(),
-                  provider.isLoading == false && provider.predictions.isNotEmpty
+                  provider.isLoading == false &&
+                          
+                          provider.pickedFile?.path != null
                       ? Text(
                           '${((provider.predictions[0]['confidence'] * 100).toStringAsFixed(2))}%',
                           style: GoogleFonts.orbitron(
