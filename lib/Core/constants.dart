@@ -1,7 +1,5 @@
   
 
-  import 'package:face_detection_app/Screens/home.dart';
-import 'package:face_detection_app/Screens/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 

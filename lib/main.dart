@@ -1,10 +1,11 @@
 import 'package:face_detection_app/Core/constants.dart';
 
-import 'package:face_detection_app/Screens/splashScreen.dart';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'Core/routes.dart';
-import 'package:provider/provider.dart';
+
 import 'provider/emotionDetectionProvider.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
             primaryColor: Constants.mainblue,
             fontFamily: 'poppins',
           ),
-          initialRoute:Routes.splashScreen,
+          initialRoute:Routes.homeScreen,
                 routes: Routes.routes,
           ),
     );
